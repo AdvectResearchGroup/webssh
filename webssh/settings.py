@@ -4,13 +4,10 @@ import ssl
 import sys
 
 from tornado.options import define
-from webssh.policy import (
-    load_host_keys, get_policy_class, check_policy_setting
-)
-from webssh.utils import (
-    to_ip_address, parse_origin_from_url, is_valid_encoding
-)
+
 from webssh._version import __version__
+from webssh.policy import check_policy_setting, get_policy_class, load_host_keys
+from webssh.utils import is_valid_encoding, parse_origin_from_url, to_ip_address
 
 
 def print_version(flag):
@@ -32,11 +29,11 @@ define('hostfile', default='', help='User defined host keys file')
 define('syshostfile', default='', help='System wide host keys file')
 define('tdstream', default='', help='Trusted downstream, separated by comma')
 define('redirect', type=bool, default=True, help='Redirecting http to https')
-define('fbidhttp', type=bool, default=True,
+define('fbidhttp', type=bool, default=False,
        help='Forbid public plain http incoming requests')
 define('xheaders', type=bool, default=True, help='Support xheaders')
-define('xsrf', type=bool, default=True, help='CSRF protection')
-define('origin', default='same', help='''Origin policy,
+define('xsrf', type=bool, default=False, help='CSRF protection')
+define('origin', default='*', help='''Origin policy,
 'same': same origin policy, matches host name and port number;
 'primary': primary domain policy, matches primary domain only;
 '<domains>': custom domains policy, matches any domain in the <domains> list

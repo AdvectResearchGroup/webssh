@@ -33,7 +33,7 @@ define('fbidhttp', type=bool, default=False,
        help='Forbid public plain http incoming requests')
 define('xheaders', type=bool, default=True, help='Support xheaders')
 define('xsrf', type=bool, default=False, help='CSRF protection')
-define('origin', default='*', help='''Origin policy,
+define('origin', default='same', help='''Origin policy,
 'same': same origin policy, matches host name and port number;
 'primary': primary domain policy, matches primary domain only;
 '<domains>': custom domains policy, matches any domain in the <domains> list

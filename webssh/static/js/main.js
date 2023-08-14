@@ -163,13 +163,6 @@ jQuery(function ($) {
         style.height = term._core._renderService._renderer.dimensions.actualCellHeight;
     }
 
-
-    function toggle_fullscreen(term) {
-        $('#terminal .terminal').toggleClass('fullscreen');
-        term.fitAddon.fit();
-    }
-
-
     function current_geometry(term) {
         if (!style.width || !style.height) {
             try {
@@ -183,13 +176,6 @@ jQuery(function ($) {
         var rows = parseInt(window.innerHeight / style.height, 10);
         return { 'cols': cols, 'rows': rows };
     }
-
-
-    function resize_terminal(term) {
-        var geometry = current_geometry(term);
-        term.on_resize(geometry.cols, geometry.rows);
-    }
-
 
     function set_backgound_color(term, color) {
         term.setOption('theme', {
@@ -327,6 +313,8 @@ jQuery(function ($) {
     function log_status(text, to_populate) {
         console.log(text);
         status.html(text.split('\n').join('<br/>'));
+        window.parent.postMessage(JSON.stringify({ action: 'log_status', 'status': text }), "*");
+
 
         if (to_populate && validated_form_data) {
             populate_form(validated_form_data);
@@ -535,7 +523,6 @@ jQuery(function ($) {
 
         sock.onopen = function () {
             term.open(terminal);
-            toggle_fullscreen(term);
             update_font_family(term);
             term.focus();
             state = CONNECTED;
@@ -546,6 +533,7 @@ jQuery(function ($) {
                 }, 500);
             }
 
+            $(".form-container").css("display", "none");
             window.parent.postMessage(JSON.stringify({ action: 'status', 'status': 'connected' }), "*");
         };
 
@@ -564,6 +552,7 @@ jQuery(function ($) {
             reset_wssh();
             log_status(e.reason, true);
             state = DISCONNECTED;
+            $(".form-container").css("display", "block");
             default_title = 'WebSSH';
             title_element.text = default_title;
         };

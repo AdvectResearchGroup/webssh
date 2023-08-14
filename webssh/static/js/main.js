@@ -163,6 +163,13 @@ jQuery(function ($) {
         style.height = term._core._renderService._renderer.dimensions.actualCellHeight;
     }
 
+
+    function resize_terminal(term) {
+        var geometry = current_geometry(term);
+        term.on_resize(geometry.cols, geometry.rows);
+    }
+
+
     function current_geometry(term) {
         if (!style.width || !style.height) {
             try {
